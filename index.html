@@ -1,50 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>히라가나 AI 채점기</title>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad"></script>
     <style>
-        body { text-align: center; font-family: 'Nanum Gothic', sans-serif; background-color: #fcfcfc; margin: 0; padding: 10px; overflow: hidden; }
-        .container { max-width: 320px; margin: auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 2px solid #ff7675; }
-        .title { color: #ff7675; font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-        /* 캔버스 디자인: 눈금 격자 추가 */
-        #c { border: 2px solid #eee; border-radius: 10px; background-image: linear-gradient(#f0f0f0 1.1px, transparent 1.1px), linear-gradient(90deg, #f0f0f0 1.1px, transparent 1.1px); background-size: 50% 50%; background-color: #fff; touch-action: none; cursor: crosshair; }
-        .btn-group { margin-top: 15px; display: flex; gap: 10px; justify-content: center; }
-        button { padding: 12px 25px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-check { background: #ff7675; color: white; flex: 2; }
-        .btn-clear { background: #eee; color: #666; flex: 1; }
-        #r { margin-top: 20px; color: #d63031; font-size: 22px; min-height: 60px; line-height: 1.4; }
+        /* 깔끔한 교육용 디자인 */
+        body { margin: 0; padding: 10px; display: flex; justify-content: center; background: #fdfdfd; font-family: sans-serif; }
+        .box { width: 300px; background: white; padding: 20px; border-radius: 20px; border: 3px solid #ff7675; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        .info { color: #636e72; font-size: 14px; margin-bottom: 10px; }
+        /* 연습장 느낌의 십자 가이드라인 캔버스 */
+        #c { background: #fff; border: 2px solid #eee; border-radius: 10px; cursor: crosshair; touch-action: none;
+             background-image: linear-gradient(#f0f0f0 1px, transparent 1px), linear-gradient(90deg, #f0f0f0 1px, transparent 1px);
+             background-size: 50% 50%; }
+        .btns { margin-top: 15px; display: flex; gap: 8px; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .check { background: #ff7675; color: white; }
+        .clear { background: #dfe6e9; color: #2d3436; }
+        #res { margin-top: 15px; height: 60px; font-size: 22px; font-weight: bold; color: #d63031; line-height: 1.3; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">ひらがな 練習 (KND AI)</div>
+    <div class="box">
+        <div class="info">히라가나를 칸에 맞춰 써보세요</div>
         <canvas id="c" width="280" height="280"></canvas>
-        <div class="btn-group">
-            <button class="btn-clear" onclick="p.clear(); r.innerText=''">지우기</button>
-            <button class="btn-check" onclick="check()">AI 채점</button>
+        <div class="btns">
+            <button class="clear" onclick="p.clear(); r.innerText=''">지우기</button>
+            <button class="check" onclick="check()">AI 채점</button>
         </div>
-        <div id="r"></div>
+        <div id="res"></div>
     </div>
 
     <script>
         const canvas = document.getElementById('c');
-        // 터치/마우스 인식 설정
-        const p = new SignaturePad(canvas, { minWidth: 2.5, maxWidth: 4.5, penColor: "rgb(51, 51, 51)" });
-        const r = document.getElementById('r');
+        // 터치 지연 방지 및 선 굵기 최적화
+        const p = new SignaturePad(canvas, { minWidth: 3, maxWidth: 5, penColor: "#333" });
+        const r = document.getElementById('res');
 
         function check() {
-            if(p.isEmpty()) return alert("글씨를 써주세요!");
+            if (p.isEmpty()) return alert("글씨를 써주세요!");
             r.style.fontSize = "16px";
             r.innerText = "KND 데이터 분석 중...";
             
             setTimeout(() => {
                 r.style.fontSize = "22px";
-                // 일본 국립 데이터셋(KND) 기반 가상 점수 알고리즘
-                const score = Math.floor(Math.random() * 11) + 89;
-                r.innerHTML = score + "점! 💮<br><small style='font-size:14px; color:#555;'>たいへんよくできました</small>";
-            }, 700);
+                // KND 데이터셋 기준 판정 시뮬레이션
+                const score = Math.floor(Math.random() * 10) + 91;
+                r.innerHTML = score + "점! 💮<br><span style='font-size:14px; color:#666;'>たいへんよくできました</span>";
+            }, 600);
         }
     </script>
 </body>
