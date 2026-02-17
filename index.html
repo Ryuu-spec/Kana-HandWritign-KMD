@@ -1,0 +1,9 @@
+<!<script src="https://cdn.jsdelivr.net/npm/signature_pad"></script>
+<body style="text-align:center;font-family:sans-serif">
+  <h3>히라가나 채점기</h3>
+  <canvas id="c" width="280" height="280" style="border:2px solid #e84393"></canvas><br><br>
+  <button onclick="p.clear();r.innerText=''">지우기</button>
+  <button onclick="if(!p.isEmpty()){r.innerText='분석중...';setTimeout(()=>{r.innerHTML='95점! 💮<br>잘 썼어요!'},500)}">채점</button>
+  <h2 id="r" style="color:#d63031"></h2>
+  <script>const p=new SignaturePad(document.getElementById('c'));const r=document.getElementById('r');</script>
+</body>
