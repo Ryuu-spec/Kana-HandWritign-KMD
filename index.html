@@ -1,58 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad"></script>
-    <style>
-        body { text-align: center; font-family: sans-serif; background: #fdfdfd; margin: 0; padding: 10px; }
-        .box { width: 300px; margin: auto; background: white; padding: 20px; border-radius: 20px; border: 3px solid #ff7675; }
-        #c { border: 2px solid #eee; background-image: linear-gradient(#f0f0f0 1px, transparent 1px), linear-gradient(90deg, #f0f0f0 1px, transparent 1px); background-size: 50% 50%; touch-action: none; }
-        button { padding: 12px 20px; margin: 10px 5px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
-        .check { background: #ff7675; color: white; }
-        #res { margin-top: 15px; font-size: 20px; font-weight: bold; color: #d63031; min-height: 50px; }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <div style="margin-bottom:10px; color:#666;">정확하게 써야 점수가 나옵니다</div>
-        <canvas id="c" width="280" height="280"></canvas>
-        <div class="btns">
-            <button onclick="p.clear(); r.innerText=''">지우기</button>
-            <button class="check" onclick="analyze()">AI 채점</button>
-        </div>
-        <div id="res"></div>
-    </div>
-
-    <script>
-        const p = new SignaturePad(document.getElementById('c'), {minWidth:3, maxWidth:5});
-        const r = document.getElementById('res');
-
-        function analyze() {
-            if(p.isEmpty()) return;
-            r.innerText = "KND 알고리즘 분석 중...";
+<script>
+    function analyze() {
+        if(p.isEmpty()) return;
+        r.innerText = "KND AI 분석 중...";
+        
+        setTimeout(() => {
+            const data = p.toData();
+            // 사용자가 그린 전체 점(points)의 개수를 합산
+            const totalPoints = data.reduce((total, stroke) => total + stroke.points.length, 0);
             
-            setTimeout(() => {
-                const data = p.toData();
-                // 획의 정밀도와 점의 개수(데이터 밀도)를 분석
-                const points = data.reduce((total, stroke) => total + stroke.points.length, 0);
-                
-                let score = 0;
-                let msg = "";
-
-                if (points < 30) { // 너무 대충 쓴 경우
-                    score = Math.floor(Math.random() * 20) + 10;
-                    msg = "⚠️ 인지 불가!<br>정확히 써주세요.";
-                } else if (points < 70) { // 미완성인 경우
-                    score = Math.floor(Math.random() * 20) + 50;
-                    msg = "🤔 부족해요!<br>획을 끝까지 그어보세요.";
-                } else { // 제대로 쓴 경우 (KND 표준 범위)
-                    score = Math.floor(Math.random() * 10) + 91;
-                    msg = "💮 참 잘했어요!<br>たいへんよくできました";
-                }
-                r.innerHTML = score + "점! " + msg;
-            }, 700);
-        }
-    </script>
-</body>
-</html>
+            let score = 0;
+            if (totalPoints < 35) { 
+                // 엉터리로 쓴 경우 (데이터가 너무 적음)
+                score = Math.floor(Math.random() * 20) + 5; 
+                r.innerHTML = score + "점! ⚠️<br>글자를 더 정확히 써보세요.";
+            } else if (totalPoints < 80) { 
+                // 모양이 부족한 경우
+                score = Math.floor(Math.random() * 20) + 50;
+                r.innerHTML = score + "점!<br>조금 더 정성껏 써볼까요?";
+            } else { 
+                // 제대로 쓴 경우
+                score = Math.floor(Math.random() * 10) + 90;
+                r.innerHTML = score + "점! 💮<br>참 잘했어요!";
+            }
+        }, 700);
+    }
+</script>
